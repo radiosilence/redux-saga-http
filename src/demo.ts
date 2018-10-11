@@ -5,7 +5,7 @@ import { sgHttpGet, sgHttpPost } from './actions'
 import { SG_HTTP_SUCCESS } from './constants'
 import { createSgHttpActionTypes } from './utils'
 
-import { createSgHttpEpic } from './sagas'
+import { createSgHttpEpic } from './epics'
 
 const POTATO = createSgHttpActionTypes('POTATO')
 

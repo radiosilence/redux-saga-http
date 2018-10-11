@@ -1,70 +1,70 @@
 /* tslint:disable:no-implicit-dependencies */
-import { find } from "lodash";
-import { toArray } from "rxjs/operators";
-import { ActionsObservable } from "redux-observable";
-import { TestScheduler } from "rxjs/testing";
+import { find } from 'lodash'
+import { toArray } from 'rxjs/operators'
+import { ActionsObservable } from 'redux-observable'
+import { TestScheduler } from 'rxjs/testing'
 
-import fetchMock from "fetch-mock";
+import fetchMock from 'fetch-mock'
 
-import { createHttpRequestEpic, startRequestEpic } from "../src/epics";
+import { createHttpRequestEpic, startRequestEpic } from '../src/epics'
 
-import { sgHttpGet } from "../src/actions";
+import { sgHttpGet } from '../src/actions'
 
-import { createSgHttpActionTypes } from "../src/utils";
+import { createSgHttpActionTypes } from '../src/utils'
 
-const BASE_URL = "https://not.a.real.domain";
+const BASE_URL = 'https://not.a.real.domain'
 
-const ACTION_TYPES = createSgHttpActionTypes("TEST");
+const ACTION_TYPES = createSgHttpActionTypes('TEST')
 
 const httpRequestEpic = createHttpRequestEpic(() => ({
     baseUrl: BASE_URL,
-    json: true
-}));
+    json: true,
+}))
 
-describe("startRequestEpic", () => {
-    it("should emit a request action", async () => {
+describe('startRequestEpic', () => {
+    it('should emit a request action', async () => {
         const action$ = ActionsObservable.of(
-            sgHttpGet("/potatoes", ACTION_TYPES)
-        );
+            sgHttpGet('/potatoes', ACTION_TYPES),
+        )
         const expectedOutputAction = {
-            type: ACTION_TYPES.REQUEST
-        };
+            type: ACTION_TYPES.REQUEST,
+        }
 
         return startRequestEpic(action$)
             .pipe(toArray())
             .subscribe((actualOutputActions: any[]) => {
                 expect(actualOutputActions[0]).toMatchObject(
-                    expectedOutputAction
-                );
-            });
-    });
-});
+                    expectedOutputAction,
+                )
+            })
+    })
+})
 
-describe("httpRequestEpic", () => {
+describe('httpRequestEpic', () => {
     const testScheduler = new TestScheduler((actual, expected) => {
         // somehow assert the two objects are equal
         // e.g. with chai `expect(actual).deep.equal(expected)`
-    });
+    })
     beforeEach(() => {
-        fetchMock.mock(`${BASE_URL}/potatoes`, [{ id: 1, name: "barry" }]);
-        fetchMock.mock(`${BASE_URL}/potatoes/1`, { id: 1, name: "barry" });
-        fetchMock.mock(`${BASE_URL}/potatoes/2`, 404);
-        fetchMock.mock(`${BASE_URL}/potatoes/3`, "argh");
+        fetchMock.mock(`${BASE_URL}/potatoes`, [{ id: 1, name: 'barry' }])
+        fetchMock.mock(`${BASE_URL}/potatoes/1`, { id: 1, name: 'barry' })
+        fetchMock.mock(`${BASE_URL}/potatoes/2`, 404)
+        fetchMock.mock(`${BASE_URL}/potatoes/3`, 'argh')
         fetchMock.mock(`${BASE_URL}/message`, {
-            thanks: "Thank you for your valuable input"
-        });
-        fetchMock.mock(`${BASE_URL}/broken`, 500);
-        fetchMock.mock(`${BASE_URL}/post`, (req: any, opts: any) => req.body);
-        fetchMock.mock(`${BASE_URL}/delete/1`, '"ok"');
+            thanks: 'Thank you for your valuable input',
+        })
+        fetchMock.mock(`${BASE_URL}/broken`, 500)
+        fetchMock.mock(`${BASE_URL}/post`, (req: any, opts: any) => req.body)
+        fetchMock.mock(`${BASE_URL}/delete/1`, '"ok"')
         fetchMock.mock(`${BASE_URL}/patch/1`, (req: any) => ({
             id: 1,
-            name: JSON.parse(req.body).name
-        }));
-    });
+            name: JSON.parse(req.body).name,
+        }))
+    })
 
     afterEach(() => {
-        fetchMock.restore();
-    });
+        fetchMock.restore()
+    })
 
     // it('should get a response success', (done) => {
     //     const action$ = ActionsObservable.of(
@@ -307,4 +307,4 @@ describe("httpRequestEpic", () => {
     //             done()
     //         })
     // })
-});
+})

@@ -32,6 +32,12 @@ export const createSgHttpActionTypes = (
         {},
     )
 
+export const filterActions = (
+    request: SgHttpRequestConfigured,
+    actionTypes: SgHttpActionTypes,
+) => ({ type }: SgHttpAction) =>
+    includes(request.actions, type) || includes(values(actionTypes), type)
+
 const getJsonFromResponse = async (response: Response, json: boolean) => {
     try {
         return json ? await response.json() : response.body
@@ -47,55 +53,43 @@ const getJsonFromResponse = async (response: Response, json: boolean) => {
     }
 }
 
-export const sgHttpFetch = (
+export async function sgHttpFetch(
     sgHttpRequest: SgHttpRequestConfigured,
-    { fetch }: SgHttpDependencies,
-): Observable<SgHttpResponse> =>
-    from(
-        (async (): Promise<SgHttpResponse> => {
-            try {
-                const {
-                    url,
-                    method,
-                    query,
-                    body,
-                    mode,
-                    cache,
-                    json,
-                } = sgHttpRequest
+): Promise<SgHttpResponse> {
+    try {
+        const { url, method, query, body, mode, cache, json } = sgHttpRequest
 
-                const headers = new Headers(sgHttpRequest.headers)
+        const headers = new Headers(sgHttpRequest.headers)
 
-                const urlWithParams =
-                    query && Object.keys(query).length > 0
-                        ? `${url}?${stringify(query)}`
-                        : url
+        const urlWithParams =
+            query && Object.keys(query).length > 0
+                ? `${url}?${stringify(query)}`
+                : url
 
-                const request = new Request(urlWithParams, {
-                    body: json ? JSON.stringify(body) : body,
-                    method,
-                    headers,
-                    mode,
-                    cache,
-                })
+        const request = new Request(urlWithParams, {
+            body: json ? JSON.stringify(body) : body,
+            method,
+            headers,
+            mode,
+            cache,
+        })
 
-                const response = await fetch(request)
-                const data = await getJsonFromResponse(response, json)
+        const response = await fetch(request)
+        const data = await getJsonFromResponse(response, json)
 
-                if (!response.ok) {
-                    const error: SgHttpError = {
-                        response,
-                        body: data,
-                    }
-                    throw error
-                }
-                return {
-                    response,
-                    data,
-                }
-            } catch (err) {
-                console.error(err)
-                throw err
+        if (!response.ok) {
+            const error: SgHttpError = {
+                response,
+                body: data,
             }
-        })(),
-    )
+            throw error
+        }
+        return {
+            response,
+            data,
+        }
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
