@@ -2,44 +2,46 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import createSagaMiddleware from 'redux-saga'
 import { put, fork, takeEvery } from 'redux-saga/effects'
-import { SgHttpGlobalSuccessAction } from './interfaces'
 import { sgHttpGet, sgHttpPost } from './actions'
 import { SG_HTTP_SUCCESS } from './constants'
 import { createSgHttpActionTypes } from './utils'
-
 import { createSgHttpSaga } from './sagas'
+import { SgHttpGlobalSuccessAction } from 'interfaces'
 
+// Action Types
 const POTATO = createSgHttpActionTypes('POTATO')
 
-interface RootState {
-    exampleVal: number
+// Actions
+const getAction = () => sgHttpGet('/', POTATO)
+
+// User defined sagas
+interface MyApiResponse {
+    status: boolean
 }
 
-const rootReducer = (
-    state: RootState = {
-        exampleVal: 1,
-    },
-    action: any,
-) => state
-
-const sgHttpSaga = createSgHttpSaga((state: RootState) => ({
-    baseUrl: 'http://localhost:3030',
-    json: true,
-}))
-
-function* resultSaga(action: any) {
-    console.log('got result', action)
+function* resultSaga(action: SgHttpGlobalSuccessAction<MyApiResponse>) {
     resultNode.innerHTML = JSON.stringify(action.result)
     yield put({ type: 'NOOP', action })
 }
+
+// Setup
+
+const sgHttpSaga = createSgHttpSaga(() => ({
+    baseUrl: 'http://localhost:3030',
+    json: true,
+}))
 
 const sagaMiddleware = createSagaMiddleware()
 
 const composeEnhancers =
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-
 const store = createStore(
-    rootReducer,
+    (
+        state = {
+            exampleVal: 1,
+        },
+        action: any,
+    ) => state,
     composeEnhancers(applyMiddleware(thunk, sagaMiddleware)),
 )
 
@@ -47,6 +49,8 @@ sagaMiddleware.run(function*() {
     yield takeEvery(SG_HTTP_SUCCESS, resultSaga)
     yield fork(sgHttpSaga)
 })
+
+// DOM stuff
 
 const createButton = (name: string, cb: () => any) => {
     const node = document.createElement('button')
@@ -58,20 +62,11 @@ const createButton = (name: string, cb: () => any) => {
     document.body.appendChild(node)
 }
 
-const getNode = createButton('GET', () => {
-    store.dispatch(sgHttpGet('/', POTATO))
-})
-const getGhNode = createButton('GET github', () => {
-    store.dispatch(
-        sgHttpGet('/zen', POTATO, null, {
-            request: {
-                baseUrl: 'http://api.github.com',
-            },
-        }),
-    )
+createButton('GET', () => {
+    store.dispatch(getAction())
 })
 
-const postNode = createButton('POST', () => {
+createButton('POST', () => {
     store.dispatch(
         sgHttpPost('/', POTATO, {
             some: 'data',
