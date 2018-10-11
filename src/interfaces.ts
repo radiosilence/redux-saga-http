@@ -1,18 +1,18 @@
 import {
-    RX_HTTP_REQUEST,
-    RX_HTTP_SUCCESS,
-    RX_HTTP_ERROR,
-    RX_HTTP_FINALLY,
+    SG_HTTP_REQUEST,
+    SG_HTTP_SUCCESS,
+    SG_HTTP_ERROR,
+    SG_HTTP_FINALLY,
 } from './constants'
 
-export type RxHttpSuccessGlobalActionType = typeof RX_HTTP_SUCCESS
-export type RxHttpErrorGlobalActionType = typeof RX_HTTP_ERROR
-export type RxHttpRequestGlobalActionType = typeof RX_HTTP_REQUEST
-export type RxHttpFinallyGlobalActionType = typeof RX_HTTP_FINALLY
+export type SgHttpSuccessGlobalActionType = typeof SG_HTTP_SUCCESS
+export type SgHttpErrorGlobalActionType = typeof SG_HTTP_ERROR
+export type SgHttpRequestGlobalActionType = typeof SG_HTTP_REQUEST
+export type SgHttpFinallyGlobalActionType = typeof SG_HTTP_FINALLY
 
-export type RxHttpRequestMode = 'cors' | 'no-cors' | 'same-origin' | 'navigate'
+export type SgHttpRequestMode = 'cors' | 'no-cors' | 'same-origin' | 'navigate'
 
-export type RxHttpRequestCache =
+export type SgHttpRequestCache =
     | 'default'
     | 'no-cache'
     | 'no-store'
@@ -25,75 +25,75 @@ export interface Dictionary<T> {
 
 export type HeadersPayload = Dictionary<string>
 
-export type RxHttpConfigFactory<T> = (state?: T | void) => RxHttpRequestBase
+export type SgHttpConfigFactory<T> = (state?: T | void) => SgHttpRequestBase
 
-export type RxHttpArgs<T = any> = Dictionary<T> | undefined
+export type SgHttpArgs<T = any> = Dictionary<T> | undefined
 
-export interface RxHttpStartRequestAction {
+export interface SgHttpStartRequestAction {
     type: string
-    args: RxHttpArgs
+    args: SgHttpArgs
 }
-export interface RxHttpGlobalSuccessAction {
-    type: RxHttpSuccessGlobalActionType
-    response: RxHttpResponse
+export interface SgHttpGlobalSuccessAction {
+    type: SgHttpSuccessGlobalActionType
+    response: SgHttpResponse
     key?: string
-    args: RxHttpArgs
+    args: SgHttpArgs
 }
 
-export interface RxHttpError {
+export interface SgHttpError {
     response: Response
     body: string | Dictionary<any>
 }
 
-export interface RxHttpSuccessAction<T = any> {
+export interface SgHttpSuccessAction<T = any> {
     type: string
     result: T
     response: Response
-    args: RxHttpArgs
+    args: SgHttpArgs
 }
 
-export interface RxHttpErrorAction {
+export interface SgHttpErrorAction {
     type: string
     error: string | Dictionary<any>
     response: Response
-    args?: RxHttpArgs
+    args?: SgHttpArgs
 }
 
-export interface RxHttpGlobalErrorAction {
-    type: RxHttpErrorGlobalActionType
-    error: RxHttpError
-    args?: RxHttpArgs
+export interface SgHttpGlobalErrorAction {
+    type: SgHttpErrorGlobalActionType
+    error: SgHttpError
+    args?: SgHttpArgs
 }
 
-export interface RxHttpFinallyAction {
+export interface SgHttpFinallyAction {
     type: string
-    args: RxHttpArgs
+    args: SgHttpArgs
 }
 
-export interface RxHttpGlobalFinallyAction {
-    type: RxHttpFinallyGlobalActionType
-    args: RxHttpArgs
+export interface SgHttpGlobalFinallyAction {
+    type: SgHttpFinallyGlobalActionType
+    args: SgHttpArgs
 }
 
-export interface RxHttpRequestAction {
-    type: RxHttpRequestGlobalActionType
-    actionTypes: RxHttpActionTypes
-    request: RxHttpRequest
+export interface SgHttpRequestAction {
+    type: SgHttpRequestGlobalActionType
+    actionTypes: SgHttpActionTypes
+    request: SgHttpRequest
     key?: string
-    args?: RxHttpArgs
+    args?: SgHttpArgs
 }
 
-export type RxHttpGlobalActionType =
-    | RxHttpSuccessGlobalActionType
-    | RxHttpErrorGlobalActionType
-    | RxHttpRequestGlobalActionType
-    | RxHttpFinallyGlobalActionType
+export type SgHttpGlobalActionType =
+    | SgHttpSuccessGlobalActionType
+    | SgHttpErrorGlobalActionType
+    | SgHttpRequestGlobalActionType
+    | SgHttpFinallyGlobalActionType
 
-export interface RxHttpRequestActionConfigured extends RxHttpRequestAction {
-    request: RxHttpRequestConfigured
+export interface SgHttpRequestActionConfigured extends SgHttpRequestAction {
+    request: SgHttpRequestConfigured
 }
 
-export interface RxHttpActionTypes {
+export interface SgHttpActionTypes {
     REQUEST: string
     SUCCESS: string
     ERROR: string
@@ -109,95 +109,95 @@ export type QueryStringable =
     | undefined
     | null
 
-export interface RxHttpQueryParams {
+export interface SgHttpQueryParams {
     [key: string]: QueryStringable | QueryStringable[]
 }
 
-export interface RxHttpRequestConfig {
-    request?: RxHttpRequestBase
-    args?: RxHttpArgs
+export interface SgHttpRequestConfig {
+    request?: SgHttpRequestBase
+    args?: SgHttpArgs
     key?: string
 }
 
-export interface RxHttpRequestBase {
-    query?: RxHttpQueryParams | null
+export interface SgHttpRequestBase {
+    query?: SgHttpQueryParams | null
     body?: any
     headers?: HeadersPayload
     extraHeaders?: HeadersPayload
-    mode?: RxHttpRequestMode
-    cache?: RxHttpRequestCache
+    mode?: SgHttpRequestMode
+    cache?: SgHttpRequestCache
     baseUrl?: string
     json?: boolean
-    actions?: RxHttpGlobalActionType[]
+    actions?: SgHttpGlobalActionType[]
 }
 
-export interface RxHttpRequest extends RxHttpRequestBase {
+export interface SgHttpRequest extends SgHttpRequestBase {
     url: string
     method: string
     json?: boolean
 }
 
-export interface RxHttpRequestConfigured extends RxHttpRequest {
+export interface SgHttpRequestConfigured extends SgHttpRequest {
     json: boolean
-    actions: RxHttpGlobalActionType[]
+    actions: SgHttpGlobalActionType[]
 }
 
-export interface RxHttpResponse {
+export interface SgHttpResponse {
     response: Response
     data: any
 }
 
-export type RxHttpAction =
-    | { type: string; args: RxHttpArgs }
-    | RxHttpGlobalErrorAction
-    | RxHttpErrorAction
-    | RxHttpRequestAction
+export type SgHttpAction =
+    | { type: string; args: SgHttpArgs }
+    | SgHttpGlobalErrorAction
+    | SgHttpErrorAction
+    | SgHttpRequestAction
 
 /* Actions */
-export type RxHttpGet = (
+export type SgHttpGet = (
     path: string,
-    actionTypes: RxHttpActionTypes,
-    query?: RxHttpQueryParams | null,
-    config?: RxHttpRequestConfig,
-) => RxHttpRequestAction
+    actionTypes: SgHttpActionTypes,
+    query?: SgHttpQueryParams | null,
+    config?: SgHttpRequestConfig,
+) => SgHttpRequestAction
 
-export type RxHttpPost = <T>(
+export type SgHttpPost = <T>(
     path: string,
-    actionTypes: RxHttpActionTypes,
+    actionTypes: SgHttpActionTypes,
     body?: T,
-    config?: RxHttpRequestConfig,
-) => RxHttpRequestAction
+    config?: SgHttpRequestConfig,
+) => SgHttpRequestAction
 
-export type RxHttpPut = <T>(
+export type SgHttpPut = <T>(
     path: string,
-    actionTypes: RxHttpActionTypes,
+    actionTypes: SgHttpActionTypes,
     body?: T,
-    config?: RxHttpRequestConfig,
-) => RxHttpRequestAction
+    config?: SgHttpRequestConfig,
+) => SgHttpRequestAction
 
-export type RxHttpPatch = <T>(
+export type SgHttpPatch = <T>(
     path: string,
-    actionTypes: RxHttpActionTypes,
+    actionTypes: SgHttpActionTypes,
     body?: T,
-    config?: RxHttpRequestConfig,
-) => RxHttpRequestAction
+    config?: SgHttpRequestConfig,
+) => SgHttpRequestAction
 
-export type RxHttpDelete = (
+export type SgHttpDelete = (
     path: string,
-    actionTypes: RxHttpActionTypes,
-    config?: RxHttpRequestConfig,
-) => RxHttpRequestAction
+    actionTypes: SgHttpActionTypes,
+    config?: SgHttpRequestConfig,
+) => SgHttpRequestAction
 
-export type RxHttpHead = (
+export type SgHttpHead = (
     path: string,
-    actionTypes: RxHttpActionTypes,
-    config?: RxHttpRequestConfig,
-) => RxHttpRequestAction
+    actionTypes: SgHttpActionTypes,
+    config?: SgHttpRequestConfig,
+) => SgHttpRequestAction
 
 export type Fetch = (
     input: RequestInfo,
     init?: RequestInit,
 ) => Promise<Response>
-export interface RxHttpDependencies {
+export interface SgHttpDependencies {
     fetch: Fetch
 }

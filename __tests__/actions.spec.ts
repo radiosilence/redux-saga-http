@@ -1,145 +1,145 @@
-import * as A from '../src/actions'
+import * as A from "../src/actions";
 import {
-    RX_HTTP_ERROR,
-    RX_HTTP_FINALLY,
-    RX_HTTP_REQUEST,
-    RX_HTTP_SUCCESS,
-} from '../src/constants'
-import { createRxHttpActionTypes } from '../src/utils'
+    SG_HTTP_ERROR,
+    SG_HTTP_FINALLY,
+    SG_HTTP_REQUEST,
+    SG_HTTP_SUCCESS
+} from "../src/constants";
+import { createSgHttpActionTypes } from "../src/utils";
 
-const URL = 'https://example.com'
-const ACTION_TYPES = createRxHttpActionTypes('TEST')
+const URL = "https://example.com";
+const ACTION_TYPES = createSgHttpActionTypes("TEST");
 
-describe('rxHttpGet', () => {
-    it('should return a get action', () => {
-        const action = A.rxHttpGet(URL, ACTION_TYPES)
+describe("sgHttpGet", () => {
+    it("should return a get action", () => {
+        const action = A.sgHttpGet(URL, ACTION_TYPES);
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'GET',
-            },
-        })
-    })
-    it('should return a get action with querystring', () => {
-        const action = A.rxHttpGet(URL, ACTION_TYPES, { hi: 'ho' })
+                method: "GET"
+            }
+        });
+    });
+    it("should return a get action with querystring", () => {
+        const action = A.sgHttpGet(URL, ACTION_TYPES, { hi: "ho" });
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                query: { hi: 'ho' },
-                method: 'GET',
-            },
-        })
-    })
-})
+                query: { hi: "ho" },
+                method: "GET"
+            }
+        });
+    });
+});
 
-describe('rxHttpPost', () => {
-    it('should return a post action', () => {
-        const action = A.rxHttpPost(URL, ACTION_TYPES)
+describe("sgHttpPost", () => {
+    it("should return a post action", () => {
+        const action = A.sgHttpPost(URL, ACTION_TYPES);
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'POST',
-            },
-        })
-    })
+                method: "POST"
+            }
+        });
+    });
 
-    it('should return a post action with body', () => {
-        const action = A.rxHttpPost(URL, ACTION_TYPES, { potato: 'tomato' })
+    it("should return a post action with body", () => {
+        const action = A.sgHttpPost(URL, ACTION_TYPES, { potato: "tomato" });
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'POST',
-                body: { potato: 'tomato' },
-            },
-        })
-    })
-})
+                method: "POST",
+                body: { potato: "tomato" }
+            }
+        });
+    });
+});
 
-describe('rxHttpPut', () => {
-    it('should return a put action', () => {
-        const action = A.rxHttpPut(URL, ACTION_TYPES)
+describe("sgHttpPut", () => {
+    it("should return a put action", () => {
+        const action = A.sgHttpPut(URL, ACTION_TYPES);
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'PUT',
-            },
-        })
-    })
+                method: "PUT"
+            }
+        });
+    });
 
-    it('should return a put action with body', () => {
-        const action = A.rxHttpPut(URL, ACTION_TYPES, { potato: 'tomato' })
+    it("should return a put action with body", () => {
+        const action = A.sgHttpPut(URL, ACTION_TYPES, { potato: "tomato" });
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'PUT',
-                body: { potato: 'tomato' },
-            },
-        })
-    })
-})
+                method: "PUT",
+                body: { potato: "tomato" }
+            }
+        });
+    });
+});
 
-describe('rxHttpDelete', () => {
-    it('should return a delete action', () => {
-        const action = A.rxHttpDelete(URL, ACTION_TYPES)
+describe("sgHttpDelete", () => {
+    it("should return a delete action", () => {
+        const action = A.sgHttpDelete(URL, ACTION_TYPES);
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'DELETE',
-            },
-        })
-    })
-})
+                method: "DELETE"
+            }
+        });
+    });
+});
 
-describe('rxHttpHead', () => {
-    it('should return a head action', () => {
-        const action = A.rxHttpHead(URL, ACTION_TYPES)
+describe("sgHttpHead", () => {
+    it("should return a head action", () => {
+        const action = A.sgHttpHead(URL, ACTION_TYPES);
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'HEAD',
-            },
-        })
-    })
-})
+                method: "HEAD"
+            }
+        });
+    });
+});
 
-describe('rxHttpPatch', () => {
-    it('should return a patch action', () => {
-        const action = A.rxHttpPatch(URL, ACTION_TYPES)
+describe("sgHttpPatch", () => {
+    it("should return a patch action", () => {
+        const action = A.sgHttpPatch(URL, ACTION_TYPES);
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'PATCH',
-            },
-        })
-    })
-    it('should return a patch action with body', () => {
-        const action = A.rxHttpPatch(URL, ACTION_TYPES, { hi: 'ho' })
+                method: "PATCH"
+            }
+        });
+    });
+    it("should return a patch action with body", () => {
+        const action = A.sgHttpPatch(URL, ACTION_TYPES, { hi: "ho" });
         expect(action).toMatchObject({
-            type: RX_HTTP_REQUEST,
+            type: SG_HTTP_REQUEST,
             actionTypes: ACTION_TYPES,
             request: {
                 url: URL,
-                method: 'PATCH',
-                body: { hi: 'ho' },
-            },
-        })
-    })
-})
+                method: "PATCH",
+                body: { hi: "ho" }
+            }
+        });
+    });
+});

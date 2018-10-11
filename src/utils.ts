@@ -1,30 +1,29 @@
 import { keyBy } from 'lodash'
 import { stringify } from 'qs'
-import { Observable, from } from 'rxjs'
 
 import {
-    RxHttpActionTypes,
-    RxHttpRequest,
-    RxHttpResponse,
-    RxHttpDependencies,
-    RxHttpError,
-    RxHttpRequestConfigured,
+    SgHttpActionTypes,
+    SgHttpRequest,
+    SgHttpResponse,
+    SgHttpDependencies,
+    SgHttpError,
+    SgHttpRequestConfigured,
 } from './interfaces'
-import { RX_HTTP_JSON_PARSE_ERROR } from './constants'
+import { SG_HTTP_JSON_PARSE_ERROR } from './constants'
 
 const makeAction = (base: string, action: string) =>
     `@@rx-http/${`${base}_${action}`.toUpperCase()}`
 
-export const createRxHttpActionTypes = (
+export const createSgHttpActionTypes = (
     base: string,
-    actions: (keyof RxHttpActionTypes)[] = [
+    actions: (keyof SgHttpActionTypes)[] = [
         'ERROR',
         'REQUEST',
         'SUCCESS',
         'CANCEL',
         'FINALLY',
     ],
-): RxHttpActionTypes =>
+): SgHttpActionTypes =>
     actions.reduce(
         (acc: any, action: string) => ({
             ...acc,
@@ -38,9 +37,9 @@ const getJsonFromResponse = async (response: Response, json: boolean) => {
         return json ? await response.json() : response.body
     } catch (parseError) {
         if (json) {
-            const error: RxHttpError = {
+            const error: SgHttpError = {
                 response,
-                body: RX_HTTP_JSON_PARSE_ERROR,
+                body: SG_HTTP_JSON_PARSE_ERROR,
             }
             throw error
         }
@@ -48,12 +47,12 @@ const getJsonFromResponse = async (response: Response, json: boolean) => {
     }
 }
 
-export const rxHttpFetch = (
-    rxHttpRequest: RxHttpRequestConfigured,
-    { fetch }: RxHttpDependencies,
-): Observable<RxHttpResponse> =>
+export const sgHttpFetch = (
+    sgHttpRequest: SgHttpRequestConfigured,
+    { fetch }: SgHttpDependencies,
+): Observable<SgHttpResponse> =>
     from(
-        (async (): Promise<RxHttpResponse> => {
+        (async (): Promise<SgHttpResponse> => {
             try {
                 const {
                     url,
@@ -63,9 +62,9 @@ export const rxHttpFetch = (
                     mode,
                     cache,
                     json,
-                } = rxHttpRequest
+                } = sgHttpRequest
 
-                const headers = new Headers(rxHttpRequest.headers)
+                const headers = new Headers(sgHttpRequest.headers)
 
                 const urlWithParams =
                     query && Object.keys(query).length > 0
@@ -84,7 +83,7 @@ export const rxHttpFetch = (
                 const data = await getJsonFromResponse(response, json)
 
                 if (!response.ok) {
-                    const error: RxHttpError = {
+                    const error: SgHttpError = {
                         response,
                         body: data,
                     }

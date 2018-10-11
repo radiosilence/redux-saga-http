@@ -1,17 +1,17 @@
-# redux-rx-http
+# redux-saga-http
 
 ## TODO: Update Readme for 1.0
 
 [![CircleCI](https://circleci.com/gh/radiosilence/redux-rx-http.svg?style=shield)](https://circleci.com/gh/radiosilence/redux-rx-http)
 
-So, you like redux, you like RxJS, you're using redux-observable. You want to talk to APIs, and
+So, you like redux, you're using redux-saga. You want to talk to APIs, and
 consume the side effects through epics, and you want a nice, simple way to do it. This library
 works by having a single API action where the side-effect actions (request, success, error, cancel)
 are passed in with the initial action in a clean, consistent way. Oh, and we have type definitions!
 
 > **Important note:** As of version 0.14, fetch is used internally. This means you will have to inject fetch as a dependency
-in your `createEpicMiddleware` function, e.g. *isomorphic-fetch*. Also, cancellation won't actually cancel the original
-request, it will just terminate the inner stream (so no further actions will be emitted).
+> in your `createEpicMiddleware` function, e.g. _isomorphic-fetch_. Also, cancellation won't actually cancel the original
+> request, it will just terminate the inner stream (so no further actions will be emitted).
 
 ## Configuration
 
@@ -26,23 +26,23 @@ For instance, say your authorisation token was acquired asyncronously and put in
 
 ```typescript
 // ...imports...
-import { createRxHttpEpic, RxHttpRequestBase } from 'redux-rx-http'
+import { createSgHttpEpic, SgHttpRequestBase } from "redux-rx-http";
 
-const rxHttpEpic = createRxHttpEpic((state: AppState): RxHttpRequestBase => ({
-    baseUrl: 'https://my-excellent-api.com/v1.0',
-    headers: {
-        // Here we're dynamically configuring the auth token
-        Authorization: getAuthToken(state),
-    },
-}))
+const sgHttpSaga = createSgHttpSaga((state: AppState): SgHttpRequestBase => ({
+  baseUrl: "https://my-excellent-api.com/v1.0",
+  headers: {
+    // Here we're dynamically configuring the auth token
+    Authorization: getAuthToken(state)
+  }
+}));
 
 const epicMiddleware = createEpicMiddleware(
-    combineEpics(rootEpic, rxHttpEpic),
-    // Inject our fetch dependency (at least)
-    { dependencies: { fetch } },
-)
+  combineEpics(rootEpic, sgHttpEpic),
+  // Inject our fetch dependency (at least)
+  { dependencies: { fetch } }
+);
 
-const store = createStore(rootReducer, applyMiddleware(epicMiddleware))
+const store = createStore(rootReducer, applyMiddleware(epicMiddleware));
 ```
 
 ## Usage
@@ -52,13 +52,13 @@ To make a simple HTTP GET request, and then listen to the results...
 **`actions.ts`**
 
 ```typescript
-import { rxHttpGet, createRxHttpActionTypes } from 'redux-rx-http'
+import { sgHttpGet, createSgHttpActionTypes } from "redux-rx-http";
 
-const FETCH_POTATO = createRxHttpActionTypes('FETCH_POTATO')
+const FETCH_POTATO = createSgHttpActionTypes("FETCH_POTATO");
 
 // Action to fetch a potat from our API
-export const fetchPotato = (id: string): RxHttpRequestAction =>
-    rxHttpGet(`/potato/${id}`)
+export const fetchPotato = (id: string): SgHttpRequestAction =>
+  sgHttpGet(`/potato/${id}`);
 ```
 
 **`epics.ts`**
@@ -85,7 +85,6 @@ const setPotato = (action$: ActionsObservable<PotatoAction>): Observable<SetPota
 const potatoError = (action$ ActionsObservable<PotatoAction>): Observable<PotatoErrorAction> =>
   action$.ofType(FETCH_POTATO.ERROR)
     .map(action => ({ type: PotatoActions.POTATO_ERROR, error: action.error }))
-
 ```
 
 ## More complex usage
@@ -93,24 +92,24 @@ const potatoError = (action$ ActionsObservable<PotatoAction>): Observable<Potato
 Of course, simply getting a potato is simple, but each function takes a third argument of a
 relevant thing:
 
-* Query params: `rxHttpGet`
-* Request body: `rxHttpPost`, `rxHttpPut`, `rxHttpPatch`
-* None: `rxHttpDelete`, `rxHttpHead`
+* Query params: `sgHttpGet`
+* Request body: `sgHttpPost`, `sgHttpPut`, `sgHttpPatch`
+* None: `sgHttpDelete`, `sgHttpHead`
 
-And a final argument which is of type `RxHttpRequestConfig`.
+And a final argument which is of type `SgHttpRequestConfig`.
 
 ```typescript
-export interface RxHttpRequestConfig {
+export interface SgHttpRequestConfig {
   // Represents data about the request to be sent
-  request?: RxHttpRequestBase
+  request?: SgHttpRequestBase;
 
   // An arbitrary object that you can pass additional metadata in order to provide context to
   // whatever epic is consuming the side-effects, e.g. an ID, a parent ID, etc.
-  args?: {}
+  args?: {};
 
   // Shortcut to allow easy destructuring API responses that are of the form:
   // { potato: { ... potato data ...} }
-  key?: string
+  key?: string;
 }
 ```
 
@@ -120,26 +119,29 @@ So a more complex usage could look something like this:
 
 ```typescript
 export const fetchPotatosForField = (fieldId: string,
-                                     status: Status = 'ALL'): RxHttpRequestAction =>
-  rxHttpGet(`/fields/${fieldId}/potatoes`, FETCH_POTATOES_FOR_FIELD, { status }, {
+                                     status: Status = 'ALL'): SgHttpRequestAction =>
+  sgHttpGet(`/fields/${fieldId}/potatoes`, FETCH_POTATOES_FOR_FIELD, { status }, {
     key: 'potatoes',
     args: { fieldId },
   })
 
 
-export const savePotato (potato: Potato): RxHttpRequestAction =>
-  rxHttpPut(`/potato/${potato.id}`, SAVE_POTATO, potato, { args: { id } })
+export const savePotato (potato: Potato): SgHttpRequestAction =>
+  sgHttpPut(`/potato/${potato.id}`, SAVE_POTATO, potato, { args: { id } })
 ```
 
 **`epics.ts`**
 
 ```typescript
-const potatoSavedNotification = (action$: ActionsObservable<PotatoAction>): Observable<UIAction> =>
-  action$.ofType(SAVE_POTATO.SUCCESS)
+const potatoSavedNotification = (
+  action$: ActionsObservable<PotatoAction>
+): Observable<UIAction> =>
+  action$
+    .ofType(SAVE_POTATO.SUCCESS)
     .map((action: SavePotatoAction): NotifyAction => ({
       type: UIActions.NOTIFY,
-      message: `Saved potato ${action.args.id} successfully!`,
-    }))
+      message: `Saved potato ${action.args.id} successfully!`
+    }));
 ```
 
 I would advise against putting callbacks in args, as that entirely misses the point.
@@ -152,9 +154,8 @@ Because we're using observables, requests can be cancelled!
 
 ```typescript
 // Action to cancel said fetching
-export const cancelFetchPotato = () => ({ type: FETCH_POTATO.CANCEL })
+export const cancelFetchPotato = () => ({ type: FETCH_POTATO.CANCEL });
 ```
-
 
 ## Filtering output actions
 
@@ -166,11 +167,16 @@ store is a performance issue, you can filter both global and your local actions.
 Only generate success action:
 
 ```typescript
-rxHttpGet('https://potato.com/api', myActions, {}, {
-  request: {
-    actions: [RX_HTTP_SUCCESS],
+sgHttpGet(
+  "https://potato.com/api",
+  myActions,
+  {},
+  {
+    request: {
+      actions: [SG_HTTP_SUCCESS]
+    }
   }
-})
+);
 ```
 
 This can be added to base request config, as with anything else
@@ -180,7 +186,7 @@ This can be added to base request config, as with anything else
 Only generate success action:
 
 ```typescript
-const myActions = createRxHttpActions('MY', ['SUCCESS'])
+const myActions = createSgHttpActions("MY", ["SUCCESS"]);
 ```
 
 Simple!

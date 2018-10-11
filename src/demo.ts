@@ -1,21 +1,13 @@
 import { createStore, applyMiddleware, compose } from 'redux'
-import { map } from 'rxjs/operators'
 import thunk from 'redux-thunk'
-import { RxHttpGlobalSuccessAction } from './interfaces'
-import { rxHttpGet, rxHttpPost } from './actions'
-import { RX_HTTP_SUCCESS } from './constants'
-import { createRxHttpActionTypes } from './utils'
+import { SgHttpGlobalSuccessAction } from './interfaces'
+import { sgHttpGet, sgHttpPost } from './actions'
+import { SG_HTTP_SUCCESS } from './constants'
+import { createSgHttpActionTypes } from './utils'
 
-import {
-    createEpicMiddleware,
-    combineEpics,
-    ActionsObservable,
-    ofType,
-} from 'redux-observable'
+import { createSgHttpEpic } from './sagas'
 
-import { createRxHttpEpic } from './epics'
-
-const POTATO = createRxHttpActionTypes('POTATO')
+const POTATO = createSgHttpActionTypes('POTATO')
 
 interface RootState {
     exampleVal: number
@@ -28,14 +20,14 @@ const rootReducer = (
     action: any,
 ) => state
 
-const rxHttpEpic = createRxHttpEpic((state: RootState) => ({
+const sgHttpEpic = createSgHttpEpic((state: RootState) => ({
     baseUrl: 'http://localhost:3030',
     json: true,
 }))
 
-const resultEpic = (action$: ActionsObservable<RxHttpGlobalSuccessAction>) =>
+const resultEpic = (action$: ActionsObservable<SgHttpGlobalSuccessAction>) =>
     action$.pipe(
-        ofType(RX_HTTP_SUCCESS),
+        ofType(SG_HTTP_SUCCESS),
         map((result) => {
             resultNode.innerHTML = JSON.stringify(result.response.data)
             return { type: 'NOOP' }
@@ -52,7 +44,7 @@ const store = createStore(
     composeEnhancers(applyMiddleware(thunk, epicMiddleware)),
 )
 
-epicMiddleware.run(combineEpics(rxHttpEpic))
+epicMiddleware.run(combineEpics(sgHttpEpic))
 
 const createButton = (name: string, cb: () => any) => {
     const node = document.createElement('button')
@@ -65,11 +57,11 @@ const createButton = (name: string, cb: () => any) => {
 }
 
 const getNode = createButton('GET', () => {
-    store.dispatch(rxHttpGet('/', POTATO))
+    store.dispatch(sgHttpGet('/', POTATO))
 })
 const getGhNode = createButton('GET github', () => {
     store.dispatch(
-        rxHttpGet('/zen', POTATO, null, {
+        sgHttpGet('/zen', POTATO, null, {
             request: {
                 baseUrl: 'http://api.github.com',
             },
@@ -79,7 +71,7 @@ const getGhNode = createButton('GET github', () => {
 
 const postNode = createButton('POST', () => {
     store.dispatch(
-        rxHttpPost('/', POTATO, {
+        sgHttpPost('/', POTATO, {
             some: 'data',
         }),
     )

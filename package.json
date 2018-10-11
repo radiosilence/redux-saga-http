@@ -48,9 +48,6 @@
   },
   "dependencies": {
     "lodash": "4.17.10",
-    "qs": "6.5.1",
-    "redux": "3.7.2",
-    "redux-observable": "1.0.0",
-    "rxjs": "6.2.2"
+    "qs": "6.5.1"
   }
 }

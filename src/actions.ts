@@ -1,57 +1,57 @@
 import {
-    RX_HTTP_REQUEST,
-    RX_HTTP_SUCCESS,
-    RX_HTTP_ERROR,
-    RX_HTTP_FINALLY,
+    SG_HTTP_REQUEST,
+    SG_HTTP_SUCCESS,
+    SG_HTTP_ERROR,
+    SG_HTTP_FINALLY,
 } from './constants'
 
 import {
-    RxHttpActionTypes,
-    RxHttpResponse,
-    RxHttpRequest,
-    RxHttpRequestAction,
-    RxHttpRequestBase,
-    RxHttpRequestConfig,
-    RxHttpQueryParams,
-    RxHttpError,
-    RxHttpArgs,
-    RxHttpGlobalActionType,
-    RxHttpRequestGlobalActionType,
-    RxHttpRequestActionConfigured,
-    RxHttpGlobalErrorAction,
-    RxHttpErrorAction,
-    RxHttpSuccessAction,
-    RxHttpGlobalSuccessAction,
-    RxHttpFinallyAction,
-    RxHttpGlobalFinallyAction,
+    SgHttpActionTypes,
+    SgHttpResponse,
+    SgHttpRequest,
+    SgHttpRequestAction,
+    SgHttpRequestBase,
+    SgHttpRequestConfig,
+    SgHttpQueryParams,
+    SgHttpError,
+    SgHttpArgs,
+    SgHttpGlobalActionType,
+    SgHttpRequestGlobalActionType,
+    SgHttpRequestActionConfigured,
+    SgHttpGlobalErrorAction,
+    SgHttpErrorAction,
+    SgHttpSuccessAction,
+    SgHttpGlobalSuccessAction,
+    SgHttpFinallyAction,
+    SgHttpGlobalFinallyAction,
 } from './interfaces'
 
-const DEFAULT_GLOBAL_ACTIONS: RxHttpGlobalActionType[] = [
-    RX_HTTP_REQUEST,
-    RX_HTTP_SUCCESS,
-    RX_HTTP_ERROR,
-    RX_HTTP_FINALLY,
+const DEFAULT_GLOBAL_ACTIONS: SgHttpGlobalActionType[] = [
+    SG_HTTP_REQUEST,
+    SG_HTTP_SUCCESS,
+    SG_HTTP_ERROR,
+    SG_HTTP_FINALLY,
 ]
 
-export const rxHttpRequest = (
-    request: RxHttpRequest,
-    actionTypes: RxHttpActionTypes,
+export const sgHttpRequest = (
+    request: SgHttpRequest,
+    actionTypes: SgHttpActionTypes,
     args?: {},
     key?: string,
-): RxHttpRequestAction => ({
-    type: RX_HTTP_REQUEST as RxHttpRequestGlobalActionType,
+): SgHttpRequestAction => ({
+    type: SG_HTTP_REQUEST as SgHttpRequestGlobalActionType,
     actionTypes,
     key,
     request,
     args,
 })
 
-export const rxHttpRequestConfigured = (
-    config: RxHttpRequestBase,
-    action: RxHttpRequestAction,
-): RxHttpRequestActionConfigured => ({
+export const sgHttpRequestConfigured = (
+    config: SgHttpRequestBase,
+    action: SgHttpRequestAction,
+): SgHttpRequestActionConfigured => ({
     ...action,
-    type: RX_HTTP_REQUEST as RxHttpRequestGlobalActionType,
+    type: SG_HTTP_REQUEST as SgHttpRequestGlobalActionType,
     request: {
         json: true,
         actions: DEFAULT_GLOBAL_ACTIONS,
@@ -65,13 +65,13 @@ export const rxHttpRequestConfigured = (
     },
 })
 
-export const rxHttpGet = (
+export const sgHttpGet = (
     path: string,
-    actionTypes: RxHttpActionTypes,
-    query?: RxHttpQueryParams | null,
-    config: RxHttpRequestConfig = {},
-): RxHttpRequestAction =>
-    rxHttpRequest(
+    actionTypes: SgHttpActionTypes,
+    query?: SgHttpQueryParams | null,
+    config: SgHttpRequestConfig = {},
+): SgHttpRequestAction =>
+    sgHttpRequest(
         {
             ...config.request,
             url: path,
@@ -83,13 +83,13 @@ export const rxHttpGet = (
         config.key,
     )
 
-export const rxHttpPost = <T>(
+export const sgHttpPost = <T>(
     path: string,
-    actionTypes: RxHttpActionTypes,
+    actionTypes: SgHttpActionTypes,
     body?: T,
-    config: RxHttpRequestConfig = {},
-): RxHttpRequestAction =>
-    rxHttpRequest(
+    config: SgHttpRequestConfig = {},
+): SgHttpRequestAction =>
+    sgHttpRequest(
         {
             ...config.request,
             url: path,
@@ -101,13 +101,13 @@ export const rxHttpPost = <T>(
         config.key,
     )
 
-export const rxHttpPut = <T>(
+export const sgHttpPut = <T>(
     path: string,
-    actionTypes: RxHttpActionTypes,
+    actionTypes: SgHttpActionTypes,
     body?: T,
-    config: RxHttpRequestConfig = {},
-): RxHttpRequestAction =>
-    rxHttpRequest(
+    config: SgHttpRequestConfig = {},
+): SgHttpRequestAction =>
+    sgHttpRequest(
         {
             ...config.request,
             url: path,
@@ -119,13 +119,13 @@ export const rxHttpPut = <T>(
         config.key,
     )
 
-export const rxHttpPatch = <T>(
+export const sgHttpPatch = <T>(
     path: string,
-    actionTypes: RxHttpActionTypes,
+    actionTypes: SgHttpActionTypes,
     body?: T,
-    config: RxHttpRequestConfig = {},
-): RxHttpRequestAction =>
-    rxHttpRequest(
+    config: SgHttpRequestConfig = {},
+): SgHttpRequestAction =>
+    sgHttpRequest(
         {
             ...config.request,
             url: path,
@@ -137,12 +137,12 @@ export const rxHttpPatch = <T>(
         config.key,
     )
 
-export const rxHttpDelete = (
+export const sgHttpDelete = (
     path: string,
-    actionTypes: RxHttpActionTypes,
-    config: RxHttpRequestConfig = {},
-): RxHttpRequestAction =>
-    rxHttpRequest(
+    actionTypes: SgHttpActionTypes,
+    config: SgHttpRequestConfig = {},
+): SgHttpRequestAction =>
+    sgHttpRequest(
         {
             ...config.request,
             url: path,
@@ -153,12 +153,12 @@ export const rxHttpDelete = (
         config.key,
     )
 
-export const rxHttpHead = (
+export const sgHttpHead = (
     path: string,
-    actionTypes: RxHttpActionTypes,
-    config: RxHttpRequestConfig = {},
-): RxHttpRequestAction =>
-    rxHttpRequest(
+    actionTypes: SgHttpActionTypes,
+    config: SgHttpRequestConfig = {},
+): SgHttpRequestAction =>
+    sgHttpRequest(
         {
             ...config.request,
             url: path,
@@ -169,68 +169,68 @@ export const rxHttpHead = (
         config.key,
     )
 
-export const rxHttpStartRequest = ({
+export const sgHttpStartRequest = ({
     actionTypes,
     args,
-}: RxHttpRequestAction) => ({
+}: SgHttpRequestAction) => ({
     type: actionTypes.REQUEST,
     args,
 })
 
-export const rxHttpSuccess = (
-    { data, response }: RxHttpResponse,
+export const sgHttpSuccess = (
+    { data, response }: SgHttpResponse,
     key: string | undefined,
-    args: RxHttpArgs,
-    actionTypes: RxHttpActionTypes,
-): RxHttpSuccessAction => ({
+    args: SgHttpArgs,
+    actionTypes: SgHttpActionTypes,
+): SgHttpSuccessAction => ({
     type: actionTypes.SUCCESS,
     result: key ? data[key] : data,
     response,
     args,
 })
 
-export const rxHttpGlobalSuccess = (
-    response: RxHttpResponse,
+export const sgHttpGlobalSuccess = (
+    response: SgHttpResponse,
     key: string | undefined,
-    args: RxHttpArgs,
-): RxHttpGlobalSuccessAction => ({
-    type: RX_HTTP_SUCCESS,
+    args: SgHttpArgs,
+): SgHttpGlobalSuccessAction => ({
+    type: SG_HTTP_SUCCESS,
     response,
     key,
     args,
 })
 
-export const rxHttpError = (
-    error: RxHttpError,
-    args: RxHttpArgs,
-    actionTypes: RxHttpActionTypes,
-): RxHttpErrorAction => ({
+export const sgHttpError = (
+    error: SgHttpError,
+    args: SgHttpArgs,
+    actionTypes: SgHttpActionTypes,
+): SgHttpErrorAction => ({
     type: actionTypes.ERROR,
     error: error.body,
     response: error.response,
     args,
 })
 
-export const rxHttpGlobalError = (
-    error: RxHttpError,
+export const sgHttpGlobalError = (
+    error: SgHttpError,
     args: object | undefined,
-): RxHttpGlobalErrorAction => ({
-    type: RX_HTTP_ERROR,
+): SgHttpGlobalErrorAction => ({
+    type: SG_HTTP_ERROR,
     args,
     error,
 })
 
-export const rxHttpFinally = (
-    args: RxHttpArgs,
-    actionTypes: RxHttpActionTypes,
-): RxHttpFinallyAction => ({
+export const sgHttpFinally = (
+    args: SgHttpArgs,
+    actionTypes: SgHttpActionTypes,
+): SgHttpFinallyAction => ({
     type: actionTypes.FINALLY,
     args,
 })
 
-export const rxHttpGlobalFinally = (
-    args: RxHttpArgs,
-): RxHttpGlobalFinallyAction => ({
-    type: RX_HTTP_FINALLY,
+export const sgHttpGlobalFinally = (
+    args: SgHttpArgs,
+): SgHttpGlobalFinallyAction => ({
+    type: SG_HTTP_FINALLY,
     args,
 })
