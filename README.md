@@ -22,6 +22,8 @@ config is done as a function, with store.getState() as the primary argument.
 
 For instance, say your authorisation token was acquired asyncronously and put in your store...
 
+# IGNORE README
+
 **`configure-store.ts`**
 
 ```typescript
