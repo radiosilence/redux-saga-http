@@ -59,6 +59,7 @@ export const sgHttpRequestConfigured = (
         ...action.request,
         url: `${action.request.baseUrl || config.baseUrl}${action.request.url}`,
         headers: action.request.headers || {
+            ...(config.json ? { 'content-type': 'application/json' } : {}),
             ...config.headers,
             ...action.request.extraHeaders,
         },
