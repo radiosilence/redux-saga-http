@@ -1,11 +1,13 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
+import createSagaMiddleware from 'redux-saga'
+import { put, fork, takeEvery } from 'redux-saga/effects'
 import { SgHttpGlobalSuccessAction } from './interfaces'
 import { sgHttpGet, sgHttpPost } from './actions'
 import { SG_HTTP_SUCCESS } from './constants'
 import { createSgHttpActionTypes } from './utils'
 
-import { createSgHttpEpic } from './epics'
+import { createSgHttpSaga } from './sagas'
 
 const POTATO = createSgHttpActionTypes('POTATO')
 
@@ -20,31 +22,31 @@ const rootReducer = (
     action: any,
 ) => state
 
-const sgHttpEpic = createSgHttpEpic((state: RootState) => ({
+const sgHttpSaga = createSgHttpSaga((state: RootState) => ({
     baseUrl: 'http://localhost:3030',
     json: true,
 }))
 
-const resultEpic = (action$: ActionsObservable<SgHttpGlobalSuccessAction>) =>
-    action$.pipe(
-        ofType(SG_HTTP_SUCCESS),
-        map((result) => {
-            resultNode.innerHTML = JSON.stringify(result.response.data)
-            return { type: 'NOOP' }
-        }),
-    )
+function* resultSaga(action: any) {
+    console.log('got result', action)
+    resultNode.innerHTML = JSON.stringify(action.result)
+    yield put({ type: 'NOOP', action })
+}
 
-const epicMiddleware = createEpicMiddleware({ dependencies: { fetch } })
+const sagaMiddleware = createSagaMiddleware()
 
 const composeEnhancers =
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
     rootReducer,
-    composeEnhancers(applyMiddleware(thunk, epicMiddleware)),
+    composeEnhancers(applyMiddleware(thunk, sagaMiddleware)),
 )
 
-epicMiddleware.run(combineEpics(sgHttpEpic))
+sagaMiddleware.run(function*() {
+    yield takeEvery(SG_HTTP_SUCCESS, resultSaga)
+    yield fork(sgHttpSaga)
+})
 
 const createButton = (name: string, cb: () => any) => {
     const node = document.createElement('button')

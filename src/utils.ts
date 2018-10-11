@@ -12,7 +12,7 @@ import {
 import { SG_HTTP_JSON_PARSE_ERROR } from './constants'
 
 const makeAction = (base: string, action: string) =>
-    `@@rx-http/${`${base}_${action}`.toUpperCase()}`
+    `@@sg-http/${`${base}_${action}`.toUpperCase()}`
 
 export const createSgHttpActionTypes = (
     base: string,
@@ -32,11 +32,11 @@ export const createSgHttpActionTypes = (
         {},
     )
 
-export const filterActions = (
-    request: SgHttpRequestConfigured,
-    actionTypes: SgHttpActionTypes,
-) => ({ type }: SgHttpAction) =>
-    includes(request.actions, type) || includes(values(actionTypes), type)
+// export const filterActions = (
+//     request: SgHttpRequestConfigured,
+//     actionTypes: SgHttpActionTypes,
+// ) => ({ type }: SgHttpAction) =>
+//     includes(request.actions, type) || includes(values(actionTypes), type)
 
 const getJsonFromResponse = async (response: Response, json: boolean) => {
     try {
@@ -76,7 +76,7 @@ export async function sgHttpFetch(
 
         const response = await fetch(request)
         const data = await getJsonFromResponse(response, json)
-
+        console.log('GOT DATA', data)
         if (!response.ok) {
             const error: SgHttpError = {
                 response,

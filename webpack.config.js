@@ -43,7 +43,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'redux-rx-http demo',
+      title: 'redux-sg-http demo',
       template: 'src/index.hbs',
       cdns: [],
       metas: [

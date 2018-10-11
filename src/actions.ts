@@ -190,11 +190,12 @@ export const sgHttpSuccess = (
 })
 
 export const sgHttpGlobalSuccess = (
-    response: SgHttpResponse,
+    { data, response }: SgHttpResponse,
     key: string | undefined,
     args: SgHttpArgs,
 ): SgHttpGlobalSuccessAction => ({
     type: SG_HTTP_SUCCESS,
+    result: key ? data[key] : data,
     response,
     key,
     args,

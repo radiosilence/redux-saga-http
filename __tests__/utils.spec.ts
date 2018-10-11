@@ -2,11 +2,11 @@ import { createSgHttpActionTypes, sgHttpFetch } from '../src/utils'
 
 describe('createSgHttpActionTypes', () => {
     const desiredActionTypes = {
-        ERROR: '@@rx-http/TEST_ERROR',
-        REQUEST: '@@rx-http/TEST_REQUEST',
-        SUCCESS: '@@rx-http/TEST_SUCCESS',
-        CANCEL: '@@rx-http/TEST_CANCEL',
-        FINALLY: '@@rx-http/TEST_FINALLY',
+        ERROR: '@@sg-http/TEST_ERROR',
+        REQUEST: '@@sg-http/TEST_REQUEST',
+        SUCCESS: '@@sg-http/TEST_SUCCESS',
+        CANCEL: '@@sg-http/TEST_CANCEL',
+        FINALLY: '@@sg-http/TEST_FINALLY',
     }
     it('should create an action types object', () => {
         expect(createSgHttpActionTypes('TEST')).toMatchObject(
@@ -28,8 +28,8 @@ describe('createSgHttpActionTypes', () => {
         expect(
             createSgHttpActionTypes('test', ['ERROR', 'SUCCESS']),
         ).toMatchObject({
-            ERROR: '@@rx-http/TEST_ERROR',
-            SUCCESS: '@@rx-http/TEST_SUCCESS',
+            ERROR: '@@sg-http/TEST_ERROR',
+            SUCCESS: '@@sg-http/TEST_SUCCESS',
         })
     })
 })

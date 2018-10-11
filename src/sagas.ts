@@ -5,6 +5,7 @@ import {
     call,
     put,
     select,
+    fork,
     cancel,
     cancelled,
 } from 'redux-saga/effects'
@@ -38,6 +39,11 @@ function* httpRequest({
 }: SgHttpRequestActionConfigured) {
     try {
         const response = yield call(sgHttpFetch, request)
+        console.log(
+            'GOT RESPONSE',
+            response,
+            sgHttpGlobalSuccess(response, key, args),
+        )
         yield put(sgHttpGlobalSuccess(response, key, args))
         yield put(sgHttpSuccess(response, key, args, actionTypes))
         yield put(sgHttpGlobalFinally(args))
@@ -72,5 +78,5 @@ export function* startRequestSaga(request: SgHttpRequestAction) {
 export const createSgHttpSaga = <T>(config: SgHttpConfigFactory<T>) =>
     function*() {
         yield takeEvery(SG_HTTP_REQUEST, startRequestSaga)
-        yield createHttpRequestSaga<T>(config)
+        yield fork(createHttpRequestSaga<T>(config))
     }

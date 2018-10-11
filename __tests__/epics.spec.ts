@@ -1,8 +1,8 @@
 /* tslint:disable:no-implicit-dependencies */
 import { find } from 'lodash'
-import { toArray } from 'rxjs/operators'
+import { toArray } from 'sgjs/operators'
 import { ActionsObservable } from 'redux-observable'
-import { TestScheduler } from 'rxjs/testing'
+import { TestScheduler } from 'sgjs/testing'
 
 import fetchMock from 'fetch-mock'
 
@@ -93,7 +93,7 @@ describe('httpRequestEpic', () => {
     //         sgHttpGet('/potatoes', ACTION_TYPES),
     //     )
     //     const expectedOutputAction = {
-    //         type: '@@rx-http/SUCCESS',
+    //         type: '@@sg-http/SUCCESS',
     //     }
 
     //     httpRequestEpic(action$, null, { fetch })
@@ -101,7 +101,7 @@ describe('httpRequestEpic', () => {
     //         .subscribe((actualOutputActions: any[]) => {
     //             const successAction: SgHttpErrorAction = find(
     //                 actualOutputActions,
-    //                 (action) => action.type === '@@rx-http/SUCCESS',
+    //                 (action) => action.type === '@@sg-http/SUCCESS',
     //             )
     //             expect(successAction).toMatchObject(expectedOutputAction)
     //             done()
@@ -131,7 +131,7 @@ describe('httpRequestEpic', () => {
     //     )
 
     //     const expectedOutputAction = {
-    //         type: '@@rx-http/ERROR',
+    //         type: '@@sg-http/ERROR',
     //     }
 
     //     httpRequestEpic(action$, null, { fetch })
@@ -139,7 +139,7 @@ describe('httpRequestEpic', () => {
     //         .subscribe((actualOutputActions: any[]) => {
     //             const errorAction: SgHttpErrorAction = find(
     //                 actualOutputActions,
-    //                 (action) => action.type === '@@rx-http/ERROR',
+    //                 (action) => action.type === '@@sg-http/ERROR',
     //             )
     //             expect(errorAction).toMatchObject(expectedOutputAction)
     //             done()

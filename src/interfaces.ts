@@ -33,9 +33,10 @@ export interface SgHttpStartRequestAction {
     type: string
     args: SgHttpArgs
 }
-export interface SgHttpGlobalSuccessAction {
+export interface SgHttpGlobalSuccessAction<T = any> {
     type: SgHttpSuccessGlobalActionType
-    response: SgHttpResponse
+    result: T
+    response: Response
     key?: string
     args: SgHttpArgs
 }
